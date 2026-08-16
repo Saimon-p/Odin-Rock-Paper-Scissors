@@ -88,4 +88,4 @@ function playGame() {
     console.log("Game Over! You lost the Game😵‍💫🫠");
 }
 
-playGame();
+// playGame();
