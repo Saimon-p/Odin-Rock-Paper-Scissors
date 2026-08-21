@@ -1,91 +1,159 @@
+let buttons = document.querySelectorAll('.move-button');
+let userCounter = document.querySelector('.user-counter');
+let cpuCounter = document.querySelector('.cpu-counter');
+let drawsCounter = document.querySelector('.draws-counter');
+let chosenMovebox = document.querySelectorAll('.chosen-move-box');
+let moveContainerTitleh3 = document.querySelector('.title-wrapper h3');
+let moveContainerTitle = document.querySelector('.title-wrapper');
+let gameDisplayWrapper = document.querySelector('.game-display-wrapper');
+
+let humanChoice = '';
+let computerChoice = '';
+let humanScore = 0;
+let computerScore = 0;
+let draws = 0;
+
+buttons.forEach(btn => {
+    btn.addEventListener('click', (e) =>{
+        humanChoice = e.currentTarget.value;
+        humanChoice = humanChoice.at(0).toUpperCase() + humanChoice.slice(1).toLowerCase();
+        playGame(humanChoice);
+    })
+})
+
+let keydownListenerStatus = true;
+
+document.addEventListener('keydown', (e) => {
+    if(!keydownListenerStatus) return;
+
+    humanChoice = (e.key.toLowerCase() === 'r') ? 'Rock' :
+                  (e.key.toLowerCase() === 'p') ? 'Paper': 
+                  (e.key.toLowerCase() === 's') ? 'Scissors' : null;
+    if(humanChoice !== null) playGame(humanChoice);
+
+    keydownListenerStatus = false;
+})
+
+function playGame(humanChoice) {
+    computerChoice = getComputerChoice();
+    return UpdateUI(playRound(humanChoice, computerChoice));
+}
+
 function getComputerChoice() {
     let computerChoice = Math.floor(Math.random() * 3) + 1;
     return (computerChoice === 3) ? "Rock" :
            (computerChoice === 2) ? "Paper":
-           "Scissor";
+           "Scissors";
 }
 
-function getHumanChoice() {
-    let humanChoice = prompt("Choose Your move!", "");
-     if (humanChoice === null || humanChoice.trim() === "") return false;
-    
-    humanChoice = humanChoice.at(0).toUpperCase() + humanChoice.slice(1).toLowerCase();
-    if (humanChoice === "Rock" || humanChoice === "Paper" || humanChoice === "Scissor") {
-        return humanChoice;
+function playRound(humanChoice, computerChoice) {
+    let verdict;
+    if (humanChoice === computerChoice) {
+        ++draws;
+        return "Its a Draw!";
     } else {
-        return false;
-    }
-}
-
-function playGame() {
-    let humanScore = 0;
-    let computerScore = 0;
-    let round = 1;
-
-    function playRound(humanChoice, computerChoice) {
-        let roundString = `Round ${round}: You: ${humanChoice} - Computer: ${computerChoice}`;
-        let loseString = `You lose! ${computerChoice} beats ${humanChoice}`;
-        let winString = `You win! ${humanChoice} beats ${computerChoice}`;
-        let roundScore = `Your Score: ${humanScore} - Computer Score: ${computerScore}`;
-
-        if (humanChoice == false) {
-            return false;
-        } else if (humanChoice === computerChoice){
-            console.log(roundString);
-            console.log("Tie! Play again.");   
-            roundScore = `No Points awarded! Your Score: ${humanScore} - Computer Score: ${computerScore}`;
-        } else{
-            console.log(roundString);
-            switch (humanChoice) {
-                case "Rock":
-                    if (computerChoice === "Paper") {
-                        ++computerScore;
-                        console.log(loseString);
-                    } else{
-                        ++humanScore;
-                        console.log(winString);
-                    }
-                break;
-                case "Paper": 
-                    if (computerChoice === 'Scissor') {
-                        ++computerScore;
-                        console.log(loseString);
-                    } else{
-                        ++humanScore;
-                        console.log(winString);
-                    }
-                break;
-                case "Scissor":
-                    if (computerChoice === "Rock") {
-                        ++computerScore;
-                        console.log(loseString);
-                    } else{
-                        ++humanScore;
-                        console.log(winString);
-                    }
-                break;
-            }
-            roundScore = `Your Score: ${humanScore} - Computer Score: ${computerScore}`;
+        switch (humanChoice) {
+            case "Rock":
+                if (computerChoice === "Paper") {
+                    ++computerScore;
+                    verdict = false;    
+                } else {
+                    ++humanScore;
+                    verdict = true
+                }
+            break;
+            case "Paper": 
+                
+                if (computerChoice === "Scissors") {
+                    ++computerScore;
+                    verdict = false;    
+                } else {
+                    ++humanScore;
+                    verdict = true
+                }
+            break;
+            case "Scissors":
+                
+                if (computerChoice === "Rock") {
+                    ++computerScore;
+                    verdict = false;    
+                } else {
+                    ++humanScore;
+                    verdict = true
+                }
+            break;
         }
-
-        ++round;
-        console.log(roundScore);
     }
 
-    for (let i = 0; i < 5; i++) {                
-        if (playRound(getHumanChoice(), getComputerChoice()) == false) {
-            console.log("Invalid Input! (Allowed input: 'Rock', 'Paper', 'Scissor')");
-            --i;            
-        }     
-        console.log("");  
-    }
-
-    let finalScore = `Final Score = You: ${humanScore} - Computer: ${computerScore}`;
-    console.log(finalScore);
-    
-    (humanScore === computerScore) ? console.log("Even Point! No One Won!") :
-    (humanScore > computerScore) ? console.log("You Won the Game!!🎉🥳") :
-    console.log("Game Over! You lost the Game😵‍💫🫠");
+    return (verdict === true) ? "You Win!🎉" : "You Lose";
 }
 
-// playGame();
+
+
+
+function UpdateUI(result) {
+    let chosenMoveboxSpan = document.querySelectorAll(".chosen-move-box span")
+    chosenMovebox.forEach(el => el.classList.add('animated'));
+    buttons.forEach(el => {
+        el.disabled = true;
+        el.style.cursor = 'not-allowed';
+    });
+
+    chosenMoveboxSpan.forEach(el => el.textContent = '✊');
+
+    gameDisplayWrapper.addEventListener('animationend', function reload() {
+        chosenMovebox.forEach(el => el.classList.remove('animated'));
+
+        chosenMoveboxSpan[0].textContent = (humanChoice === 'Rock') ? "✊" : (humanChoice === 'Paper') ? "✋" : "✌️";
+        chosenMoveboxSpan[1].textContent = (computerChoice === 'Rock') ? "✊" : (computerChoice === 'Paper') ? "✋" : "✌️";
+        gameDisplayWrapper.removeEventListener('animationend', reload);
+    })
+
+    titleAnimation(result);
+}
+
+function titleAnimation(result) {
+    const text = ['Rock!', 'Paper!', 'Scissors!', 'Shoot!'];
+    let index = 0;
+    let flowing = true
+    moveContainerTitleh3.textContent = text[index];
+    moveContainerTitleh3.classList.add('animated');
+
+
+        moveContainerTitleh3.addEventListener('animationend', function next() {
+            moveContainerTitleh3.classList.remove('animated');
+
+            if (index === text.length - 1) {
+                moveContainerTitleh3.removeEventListener('animationend', next);
+
+                moveContainerTitleh3.textContent = result
+
+                userCounter.textContent = humanScore;
+                cpuCounter.textContent = computerScore;
+                drawsCounter.textContent = draws + ' Draws';
+
+                if (humanScore > computerScore) {
+                userCounter.style.color = 'yellowgreen';
+                cpuCounter.style.color = 'white';
+                } else{
+                userCounter.style.color = 'white';
+                cpuCounter.style.color = 'yellowgreen';
+                }
+
+                buttons.forEach(el => {
+                    el.disabled = false;
+                    el.style.cursor = 'pointer';
+                });
+
+                keydownListenerStatus = true;
+                return;
+            } 
+
+            index++;
+
+            void moveContainerTitleh3.offsetWidth;
+
+            moveContainerTitleh3.textContent = text[index];
+            moveContainerTitleh3.classList.add('animated');
+        });
+}

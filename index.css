@@ -10,21 +10,16 @@
 }
 
 body{
-    background-color: #0d0d0d;
+    background-color: orange;
     padding-inline: 16vw;
     color: white;
     font-family: out;
     margin-block-end: 20rem;
 }
 
-.game-container{
-    margin-top: 2vw;
-}
-
 .title-container{
     color: white;
     text-align: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.158);
     padding-block: 3rem;
 }
 
@@ -104,6 +99,10 @@ body{
     font-weight: 300;
 }
 
+.title-wrapper h3.animated{
+    animation: pulse 0.4s ease;
+}
+
 .game-display-wrapper{
     display: flex;
     padding-block: 1.5rem;
@@ -126,6 +125,33 @@ body{
     padding: 1rem 1rem 1.3rem 1rem;
     border: 1px solid rgba(255, 255, 255, 0.158);
     border-radius: 100%;
+}
+
+.chosen-move-box.animated{
+    animation: bounce 0.4s ease;
+    animation-iteration-count: 3;
+}
+
+
+
+@keyframes bounce{
+    from{
+        transform: translateY(0);
+    } 50% {
+        transform: translateY(-30px);
+    } to {
+        transform: translateY(0);
+    }   
+}
+
+@keyframes pulse {
+    from{
+        opacity: 0;
+        transform: scale(0);
+    } to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .you-move-box div span,
@@ -153,6 +179,7 @@ body{
     border: 1px solid #636669;
     padding: 1rem;
     gap: 0.5rem;
+    transition: 0.2s ease;
 }
 
 .move-button span:first-child{
@@ -163,6 +190,12 @@ body{
     font-size: 1rem;
     color: white;
     font-family: out;
+}
+
+.move-button:hover{
+    border-color: rgba(255, 255, 0, 0.322);
+    transform: translateY(-5px);
+    cursor:pointer;
 }
 
 .command-container{
@@ -189,6 +222,18 @@ body{
     gap: 0.5rem;
 }
 
+.footer{
+    text-align: center;
+    background-color:#1B1C1D;
+    padding-block: 2rem;
+    margin-top: 1.5rem;
+    border: 1px solid #4e525666;
+}
+
+.footer a {
+    text-decoration: none;
+    color: yellow;
+}
 
 
 
