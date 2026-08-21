@@ -29,9 +29,10 @@ document.addEventListener('keydown', (e) => {
     humanChoice = (e.key.toLowerCase() === 'r') ? 'Rock' :
                   (e.key.toLowerCase() === 'p') ? 'Paper': 
                   (e.key.toLowerCase() === 's') ? 'Scissors' : null;
-    if(humanChoice !== null) playGame(humanChoice);
-
-    keydownListenerStatus = false;
+    if(humanChoice !== null) {
+        playGame(humanChoice);
+        keydownListenerStatus = false;
+    }
 })
 
 function playGame(humanChoice) {
@@ -135,9 +136,12 @@ function titleAnimation(result) {
                 if (humanScore > computerScore) {
                 userCounter.style.color = 'yellowgreen';
                 cpuCounter.style.color = 'white';
-                } else{
+                } else if (computerScore > humanScore){
                 userCounter.style.color = 'white';
                 cpuCounter.style.color = 'yellowgreen';
+                } else{
+                    userCounter.style.color = 'white';
+                    cpuCounter.style.color = 'white';
                 }
 
                 buttons.forEach(el => {
