@@ -235,5 +235,8 @@ body{
     color: yellow;
 }
 
-
+.reset-button:hover{
+    cursor: pointer;
+    color: yellow;
+}
 

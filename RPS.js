@@ -13,6 +13,11 @@ let humanScore = 0;
 let computerScore = 0;
 let draws = 0;
 
+let resetButton = document.querySelector('.reset-button');
+resetButton.addEventListener('click', () =>{
+    window.location.reload();
+})
+
 buttons.forEach(btn => {
     btn.addEventListener('click', (e) =>{
         humanChoice = e.currentTarget.value;
